@@ -1,0 +1,17 @@
+{
+    "pluginAlias": "Bold",
+    "pluginType": "platform",
+    "singular": true,
+    "customUi": true,
+    "schema": {
+        "type": "object",
+        "properties": {
+            "authToken": {
+                "title": "Authentication token",
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "description": "This authentication token will be refreshed automatically"
+            }
+        }
+    }
+}
