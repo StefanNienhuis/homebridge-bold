@@ -122,7 +122,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
     getLockState(device: Device) {
         if (!this.unlockedLocks.has(device.id)) {
             return 1;
-        } else if (this.unlockedLocks.get(device.id) || new Date() >= new Date()) {
+        } else if ((this.unlockedLocks.get(device.id) || new Date()) >= new Date()) {
             return 0;
         } else {
             this.unlockedLocks.delete(device.id);
