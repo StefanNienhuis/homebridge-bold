@@ -22,7 +22,10 @@ Then, install the Programmable HTTP Switch plugin<br/>
 ## Configuration
 The easiest way to configure this plugin is by using the [Config UI](https://github.com/oznu/homebridge-config-ui-x), as this plugin provides a login flow for the authentication token.
 
-*Note:* A Bold Connect hub is required for this plugin to function. This plugin will only expose locks that are linked to a Bold Connect hub to HomeKit.
+*Notes:*
+ * Bold only allows one logged in session per account. Unless you don't need to use the Bold app, it's recommended to create an additional account
+ * A Bold Connect hub is required for this plugin to function. This plugin will only expose locks that are linked to a Bold Connect hub to HomeKit.
+ * While HomeKit shows the lock with locked/unlocked state, this only reflects whether you can turn the lock, not whether the door is locked.
 
 ### Manual configuration
 An example configuration can be found in the [config.example.json](config.example.json) file.

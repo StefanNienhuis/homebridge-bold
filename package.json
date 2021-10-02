@@ -30,5 +30,13 @@
         "@homebridge/plugin-ui-utils": "^0.0.19",
         "axios": "^0.22.0",
         "fs-extra": "^9.1.0"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/StefanNienhuis/homebridge-bold.git"
+    },
+    "bugs": {
+        "url": "https://github.com/StefanNienhuis/homebridge-bold/issues"
+    },
+    "homepage": "https://github.com/StefanNienhuis/homebridge-bold#readme"
 }
