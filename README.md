@@ -16,7 +16,7 @@ This [Homebridge](https://homebridge.io) plugin brings HomeKit support for the B
 First, install Homebridge<br/>
 `npm install --global homebridge`
 
-Then, install the Programmable HTTP Switch plugin<br/>
+Then, install the Bold plugin<br/>
 `npm install --global homebridge-bold`
 
 ## Configuration
