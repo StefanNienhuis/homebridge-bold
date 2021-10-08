@@ -76,17 +76,19 @@ export class BoldAPI {
             let response = await this.request('PUT', `/v1/authentications/${this.authToken}`);
             let data = response.data as any;
 
+            this.authToken = data.token;
+
             this.log.debug('Successfully refreshed auth token');
             return data.token;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                this.log.error(`Request error while refreshing access token: ${error}`);
+                this.log.error(`Request error while refreshing auth token: ${error}`);
 
                 if (error.response?.data) {
                     this.log.error(error.response.data);
                 }
             } else {
-                this.log.error(`Unknown error while refreshing access token: ${error}`);
+                this.log.error(`Unknown error while refreshing auth token: ${error}`);
             }
         }
     }

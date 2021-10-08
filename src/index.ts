@@ -31,6 +31,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
         this.bold = new BoldAPI(this.config.authToken, this.log);
         
         api.on(APIEvent.DID_FINISH_LAUNCHING, async () => {
+            await this.refreshAuthToken();
             await this.updateDevices();
 
             this.refreshInterval = setInterval(async () => {
