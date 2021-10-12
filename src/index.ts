@@ -202,13 +202,17 @@ class BoldPlatform implements DynamicPlatformPlugin {
 
         let platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.authToken == this.config.authToken);
 
+        let hasWarned = false;
         if (platformIndex == -1) {
-            this.log.warn("Warning while reading config for auth token refresh: Couldn't find platform with current auth token. Using first instance of current platform.");
+            this.log.warn("Warning while reading config for auth token refresh: Couldn't find platform with current auth token. Using first entry of Bold config.");
+            hasWarned = true;
+
             platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME);
         }
 
         if (platformIndex == -1) {
             this.log.error("Error while reading config for auth token refresh: Couldn't find entry of Bold platform. Skipping token refresh.");
+            return;
         }
 
         let refreshedAuthToken = await this.bold.refreshToken();
@@ -227,8 +231,8 @@ class BoldPlatform implements DynamicPlatformPlugin {
 
         platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.authToken == this.config.authToken);
         
-        if (platformIndex == -1) {
-            this.log.warn("Warning while reading config for auth token refresh: Couldn't find platform with current auth token. Using first instance of current platform.");
+        if (platformIndex == -1 && hasWarned == false) {
+            this.log.warn("Warning while reading config for auth token refresh: Couldn't find platform with current auth token. Using first entry of Bold config.");
             platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME);
         }
 
@@ -237,6 +241,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
         }
         
         config.platforms[platformIndex].authToken = refreshedAuthToken;
+        this.config.authToken = refreshedAuthToken;
         
         await fs.writeJSON(this.api.user.configPath(), config, { spaces: 4 });
     }
