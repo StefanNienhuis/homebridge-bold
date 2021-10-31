@@ -39,5 +39,15 @@
     "bugs": {
         "url": "https://github.com/StefanNienhuis/homebridge-bold/issues"
     },
-    "homepage": "https://github.com/StefanNienhuis/homebridge-bold#readme"
+    "homepage": "https://github.com/StefanNienhuis/homebridge-bold#readme",
+    "funding": [
+        {
+            "type": "paypal",
+            "url": "https://paypal.me/stefannienhuis"
+        },
+        {
+            "type": "kofi",
+            "url": "https://ko-fi.com/stefannienhuis"
+        }
+    ]
 }
