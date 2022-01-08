@@ -1,7 +1,7 @@
 {
     "name": "homebridge-bold",
     "displayName": "Homebridge Bold",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "HomeKit support for the Bold Smart Locks.",
     "main": "build/index.js",
     "engines": {
