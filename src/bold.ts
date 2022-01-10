@@ -35,12 +35,12 @@ export class BoldAPI {
                 }
             });
 
-            if (response.data.errorCode != null || response.data.errorMessage != null) {
+            if ((response.data.errorCode != null && response.data.errorCode != 'OK') && (response.data.errorMessage != null && response.data.errorMessage != 'OK')) {
                 return {
                     success: false,
                     error: {
                         code: response.data.errorCode,
-                        message: response.data.errorMessage || 'Unknown error'
+                        message: response.data.errorMessage
                     }
                 };
             }
@@ -77,7 +77,7 @@ export class BoldAPI {
         let response = await this.request('GET', '/v1/effective-device-permissions');
 
         if (!response.success) {
-            this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''} while getting devices: ${response.error.message}`);
+            this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while getting devices: ${response.error.message}`);
 
             return [];
         }
@@ -101,7 +101,7 @@ export class BoldAPI {
         let response = await this.request('POST', `/v1/devices/${deviceId}/remote-activation`);
 
         if (!response.success) {
-            this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''} while activating device (${deviceId}): ${response.error.message}`);
+            this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while activating device (${deviceId}): ${response.error.message}`);
 
             return false;
         }
@@ -116,7 +116,7 @@ export class BoldAPI {
         let response = await this.request('PUT', `/v1/authentications/${this.authToken}`);
 
         if (!response.success) {
-            this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''} while refreshing token: ${response.error.message}`);
+            this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while refreshing token: ${response.error.message}`);
 
             return; 
         }
