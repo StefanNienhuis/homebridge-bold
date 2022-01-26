@@ -1,0 +1,18 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+.main {
+    width: 100%;
+    max-width: 784px;
+    padding: 24px;
+    text-align: center;
+}
+
+.notice {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+}
