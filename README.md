@@ -23,6 +23,8 @@ Then, install the Bold plugin<br/>
 ## Configuration
 The easiest way to configure this plugin is by using the [Config UI](https://github.com/oznu/homebridge-config-ui-x), as this plugin provides a login flow for the authentication token.
 
+For HOOBS or Homebridge without a configuration UI, you can use the [authentication website](https://stefannienhuis.github.io/homebridge-bold/) and use the resulting authentication token in the [Manual configuration](#manual-configuration).
+
 *Notes:*
  * Bold only allows one logged in session per account. Unless you don't need to use the Bold app, it's recommended to create an additional account
  * A Bold Connect hub is required for this plugin to function. This plugin will only expose locks that are linked to a Bold Connect hub to HomeKit.
