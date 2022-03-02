@@ -19,8 +19,8 @@ class UiServer extends HomebridgePluginUiServer {
         try {
             let response = await axios.post('https://api.sesamtechnology.com/v1/validations', {
                 phone: phoneNumber,
-                language: "en",
-                purpose: "ValidationWithCode"
+                language: 'en',
+                purpose: 'ValidationWithCode'
             });
 
             return { validationId: response.data.id };
@@ -48,7 +48,12 @@ class UiServer extends HomebridgePluginUiServer {
 
         try {
             let response = await axios.post('https://api.sesamtechnology.com/v1/authentications', {
-                validationId
+                validationId,
+
+                // These are modified values captured from the Bold API
+                clientType: 'IOS',
+                clientId: 1234567890123456789,
+                appId: 'com.nienhuisdevelopment.homebridge.bold'
             }, {
                 auth: {
                     username: phoneNumber,
