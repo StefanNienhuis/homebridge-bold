@@ -101,7 +101,12 @@ async function authenticate() {
                 'Authorization': `Basic ${btoa(`${phoneNumber}:${password}`)}`
             },
             body: JSON.stringify({
-                validationId
+                validationId,
+
+                // These are modified values captured from the Bold API
+                clientType: 'IOS',
+                clientId: 1234567890123456789,
+                appId: 'com.nienhuisdevelopment.homebridge.bold'
             })
         });
 
