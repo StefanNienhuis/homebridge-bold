@@ -24,7 +24,7 @@ export class BoldAPI {
         private log: Logger
     ) {}
 
-    private async request(method: Method, endpoint: string): Promise<APIResponse<any>> {
+    private async request(method: Method, endpoint: string, body: unknown | undefined = undefined): Promise<APIResponse<any>> {
         try {
             let response = await axios.request<any>({
                 method: method,
@@ -32,7 +32,8 @@ export class BoldAPI {
                 headers: {
                     'X-Auth-Token': this.authToken,
                     'Content-Type': 'application/json'
-                }
+                },
+                data: body
             });
 
             if ((response.data.errorCode != null && response.data.errorCode != 'OK') && (response.data.errorMessage != null && response.data.errorMessage != 'OK')) {
@@ -86,7 +87,7 @@ export class BoldAPI {
             let devices = response.data as Device[];
             let supportedDevices = devices.filter((device) => device.id != null && device.name && device.gateway != null);
 
-            console.debug(`Total device count: ${devices.length}, Supported device count: ${supportedDevices.length}`);
+            this.log.debug(`Total device count: ${devices.length}, Supported device count: ${supportedDevices.length}`);
             
             return supportedDevices;
         } else {
@@ -113,7 +114,11 @@ export class BoldAPI {
     async refreshToken(): Promise<string | undefined> {
         this.log.debug('Refreshing auth token');
 
-        let response = await this.request('PUT', `/v1/authentications/${this.authToken}`);
+        let response = await this.request('PUT', `/v1/authentications/${this.authToken}`, {
+            clientType: 'IOS',
+            clientId: 4952073786011980410,
+            appId: 'sesam.technology.bold'
+        });
 
         if (!response.success) {
             this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while refreshing token: ${response.error.message}`);
