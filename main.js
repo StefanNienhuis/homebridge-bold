@@ -105,8 +105,8 @@ async function authenticate() {
 
                 // These are modified values captured from the Bold API
                 clientType: 'IOS',
-                clientId: 1234567890123456789,
-                appId: 'com.nienhuisdevelopment.homebridge.bold'
+                clientId: 4952073786011980410,
+                appId: 'sesam.technology.bold'
             })
         });
 
