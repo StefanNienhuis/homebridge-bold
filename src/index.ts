@@ -28,14 +28,14 @@ class BoldPlatform implements DynamicPlatformPlugin {
     ) {
         this.hap = api.hap;
         this.config = config as Config;
-        this.bold = new BoldAPI(this.config.authToken, this.log);
+        this.bold = new BoldAPI(this.config.accessToken, this.config.refreshToken, this.log);
         
         api.on(APIEvent.DID_FINISH_LAUNCHING, async () => {
-            await this.refreshAuthToken();
+            await this.refreshAccessToken();
             await this.updateDevices();
 
             this.refreshInterval = setInterval(async () => {
-                await this.refreshAuthToken();
+                await this.refreshAccessToken();
                 await this.updateDevices();
             }, 24 * 60 * 60 * 1000);
         });
@@ -190,34 +190,34 @@ class BoldPlatform implements DynamicPlatformPlugin {
         }
     }
 
-    async refreshAuthToken() {
+    async refreshAccessToken() {
         let config;
 
         try {
             config = await fs.readJSON(this.api.user.configPath());
         } catch (error) {
-            this.log.error(`Error while reading config for auth token refresh: ${error}`);
+            this.log.error(`Error while reading config for access token refresh: ${error}`);
             return;
         }
 
-        let platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.authToken == this.config.authToken);
+        let platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.accessToken == this.config.accessToken);
 
         let hasWarned = false;
         if (platformIndex == -1) {
-            this.log.warn("Warning while reading config for auth token refresh: Couldn't find platform with current auth token. Using first entry of Bold config.");
+            this.log.warn("Warning while reading config for access token refresh: Couldn't find platform with current access token. Using first entry of Bold config.");
             hasWarned = true;
 
             platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME);
         }
 
         if (platformIndex == -1) {
-            this.log.error("Error while reading config for auth token refresh: Couldn't find entry of Bold platform. Skipping token refresh.");
+            this.log.error("Error while reading config for access token refresh: Couldn't find entry of Bold platform. Skipping token refresh.");
             return;
         }
 
-        let refreshedAuthToken = await this.bold.refreshToken();
+        let refreshedTokens = await this.bold.refresh();
 
-        if (!refreshedAuthToken) {
+        if (!refreshedTokens) {
             return;
         }
 
@@ -225,23 +225,26 @@ class BoldPlatform implements DynamicPlatformPlugin {
         try {
             config = await fs.readJSON(this.api.user.configPath());
         } catch (error) {
-            this.log.error(`Error while reading config for auth token refresh: ${error}`);
+            this.log.error(`Error while reading config for access token refresh: ${error}`);
             return;
         }
 
-        platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.authToken == this.config.authToken);
+        platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.accessToken == this.config.accessToken);
         
         if (platformIndex == -1 && hasWarned == false) {
-            this.log.warn("Warning while reading config for auth token refresh: Couldn't find platform with current auth token. Using first entry of Bold config.");
+            this.log.warn("Warning while reading config for access token refresh: Couldn't find platform with current access token. Using first entry of Bold config.");
             platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME);
         }
 
         if (platformIndex == -1) {
-            this.log.error("Error while reading config for auth token refresh: Couldn't find entry of Bold platform. Skipping token refresh.");
+            this.log.error("Error while reading config for access token refresh: Couldn't find entry of Bold platform. Skipping token refresh.");
         }
+
+        this.config.accessToken = refreshedTokens.accessToken;
+        this.config.refreshToken = refreshedTokens.refreshToken;
         
-        config.platforms[platformIndex].authToken = refreshedAuthToken;
-        this.config.authToken = refreshedAuthToken;
+        config.platforms[platformIndex].accessToken = refreshedTokens.accessToken;
+        config.platforms[platformIndex].refreshToken = refreshedTokens.refreshToken;
         
         await fs.writeJSON(this.api.user.configPath(), config, { spaces: 4 });
     }

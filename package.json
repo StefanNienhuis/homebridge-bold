@@ -30,6 +30,7 @@
     "dependencies": {
         "@homebridge/plugin-ui-utils": "^0.0.19",
         "axios": "^0.22.0",
+        "form-data": "^4.0.0",
         "fs-extra": "^9.1.0"
     },
     "repository": {

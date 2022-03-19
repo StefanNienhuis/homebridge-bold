@@ -6,11 +6,17 @@
     "schema": {
         "type": "object",
         "properties": {
-            "authToken": {
-                "title": "Authentication token",
+            "accessToken": {
+                "title": "Access token",
                 "type": "string",
                 "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
-                "description": "This authentication token will be refreshed automatically"
+                "description": "This access token will be refreshed automatically."
+            },
+            "refreshToken": {
+                "title": "Refresh token",
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "description": "This token will be used to refresh the access token."
             }
         }
     }

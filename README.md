@@ -21,9 +21,9 @@ Then, install the Bold plugin<br/>
 `npm install --global homebridge-bold`
 
 ## Configuration
-The easiest way to configure this plugin is by using the [Config UI](https://github.com/oznu/homebridge-config-ui-x), as this plugin provides a login flow for the authentication token.
+The easiest way to configure this plugin is by using the [Config UI](https://github.com/oznu/homebridge-config-ui-x), as this plugin provides a login flow for the access & refresh token.
 
-For HOOBS or Homebridge without a configuration UI, you can use the [authentication website](https://stefannienhuis.github.io/homebridge-bold/) and use the resulting authentication token in the [Manual configuration](#manual-configuration).
+For HOOBS or Homebridge without a configuration UI, you can use the [authentication website](https://stefannienhuis.github.io/homebridge-bold/) and use the resulting access & refresh token in the [Manual configuration](#manual-configuration).
 
 *Notes:*
  * Bold only allows one logged in session per account. Unless you don't need to use the Bold app, it's recommended to create an additional account
@@ -33,10 +33,11 @@ For HOOBS or Homebridge without a configuration UI, you can use the [authenticat
 ### Manual configuration
 An example configuration can be found in the [config.example.json](config.example.json) file.
 
-| Property    | Type     | Details                                                 |
-| ----------- | -------- | ------------------------------------------------------- |
-| `platform`  | `string` | **Required**<br/>Must always be `Bold`.                 |
-| `authToken` | `string` | **Required**<br/>Authentication token for the Bold API. |
+| Property       | Type     | Details                                          |
+| -------------- | -------- | ------------------------------------------------ |
+| `platform`     | `string` | **Required**<br/>Must always be `Bold`.          |
+| `accessToken`  | `string` | **Required**<br/>Access token for the Bold API.  |
+| `refreshToken` | `string` | **Required**<br/>Refresh token for the Bold API. |
 
 ## Credits
 

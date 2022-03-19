@@ -17,7 +17,8 @@
     "platforms": [
         {
             "platform": "Bold",
-            "authToken": "<authentication token>"
+            "accessToken": "<access token>",
+            "refreshToken": "<refresh token>"
         }
     ]
 }

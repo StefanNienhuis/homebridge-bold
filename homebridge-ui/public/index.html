@@ -33,7 +33,7 @@
     let passwordPage = document.getElementById('passwordPage');
     let configPage = document.getElementById('configPage');
 
-    let phoneNumber, validationId;
+    let phoneNumber, verificationToken;
 
     (async () => {
         let config = await homebridge.getPluginConfig();
@@ -71,9 +71,7 @@
         phoneNumber = document.getElementById('phoneNumber').value;
 
         try {
-            let response = await homebridge.request('/requestCode', { phoneNumber });
-
-            validationId = response.validationId;
+            await homebridge.request('/requestCode', { phoneNumber });
 
             show('validationCode')
         } catch (error) {
@@ -85,9 +83,9 @@
         let code = document.getElementById('validationCode').value;
 
         try {
-            let response = await homebridge.request('/validateCode', { validationId, code });
+            let response = await homebridge.request('/validateCode', { phoneNumber, code });
 
-            validationId = response.validationId;
+            verificationToken = response.verificationToken;
 
             show('password')
         } catch (error) {
@@ -99,7 +97,14 @@
         let password = document.getElementById('password').value;
 
         try {
-            let response = await homebridge.request('/authenticate', { validationId, phoneNumber, password });
+            let response = await homebridge.request('/authenticate', { verificationToken, phoneNumber, password });
+
+            if (!response.accessToken || !response.refreshToken) {
+                showError({
+                    message: `Missing access/refresh token`,
+                    error: JSON.stringify(response)
+                })
+            }
 
             let config = await homebridge.getPluginConfig();
             
@@ -109,7 +114,8 @@
                 }]
             }
 
-            config[0].authToken = response.token;
+            config[0].accessToken = response.accessToken;
+            config[0].refreshToken = response.refreshToken;
             
             await homebridge.updatePluginConfig(config);
 
@@ -124,6 +130,10 @@
 
         let errorElement = document.getElementById('error');
 
-        errorElement.innerHTML = JSON.stringify(error);
+        if (typeof error.message == 'string' && typeof error.error == 'string') {
+            errorElement.innerHTML = `${error.message}: ${error.error}`;
+        } else {
+            errorElement.innerHTML = JSON.stringify(error);
+        }
     }
 </script>

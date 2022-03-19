@@ -1,4 +1,5 @@
 import axios, { AxiosError, Method } from 'axios';
+import FormData from 'form-data';
 import { Logger } from 'homebridge';
 import { Device } from './types';
 
@@ -20,18 +21,20 @@ type APIResponse<Data> = APISuccess<Data> | APIError;
 export class BoldAPI {
 
     constructor(
-        private authToken: string,
+        private accessToken: string,
+        private refreshToken: string,
         private log: Logger
     ) {}
 
-    private async request(method: Method, endpoint: string, body: unknown | undefined = undefined): Promise<APIResponse<any>> {
+    private async request(method: Method, endpoint: string, body: unknown | undefined = undefined, headers: Record<string, unknown> | undefined = undefined): Promise<APIResponse<any>> {
         try {
             let response = await axios.request<any>({
                 method: method,
                 url: `https://api.sesamtechnology.com${endpoint}`,
                 headers: {
-                    'X-Auth-Token': this.authToken,
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${this.accessToken}`,
+                    ...(!Object.keys(headers || {}).some((header) => header.toLowerCase() == 'content-type') && { 'Content-Type': 'application/json' }),
+                    ...headers
                 },
                 data: body
             });
@@ -111,14 +114,17 @@ export class BoldAPI {
         return true;
     }
 
-    async refreshToken(): Promise<string | undefined> {
-        this.log.debug('Refreshing auth token');
+    async refresh(): Promise<{ accessToken: string, refreshToken: string } | undefined> {
+        this.log.debug('Refreshing access token');
 
-        let response = await this.request('PUT', `/v1/authentications/${this.authToken}`, {
-            clientType: 'IOS',
-            clientId: 4952073786011980410,
-            appId: 'sesam.technology.bold'
-        });
+        let formData = new FormData();
+
+        formData.append('client_id', 'BoldApp');
+        formData.append('client_secret', 'pgJFgnGB87f9ednFiiHygCbf');
+        formData.append('refresh_token', this.refreshToken);
+        formData.append('grant_type', 'refresh_token');
+        
+        let response = await this.request('POST', '/v2/oauth/token', formData, formData.getHeaders());
 
         if (!response.success) {
             this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while refreshing token: ${response.error.message}`);
@@ -128,10 +134,11 @@ export class BoldAPI {
 
         let data = response.data as any;
 
-        this.authToken = data.token;
+        this.accessToken = data.access_token;
+        this.refreshToken = data.refresh_token;
 
-        this.log.debug('Successfully refreshed auth token');
-        return data.token;
+        this.log.debug('Successfully refreshed access token');
+        return { accessToken: this.accessToken, refreshToken: this.refreshToken };
     }
 
 }

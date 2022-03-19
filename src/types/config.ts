@@ -1,5 +1,6 @@
 import { PlatformConfig } from 'homebridge';
 
 export interface Config extends PlatformConfig {
-    authToken: string;
+    accessToken: string;
+    refreshToken: string;
 }

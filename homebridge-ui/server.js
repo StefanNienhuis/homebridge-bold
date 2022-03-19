@@ -1,5 +1,6 @@
 let { HomebridgePluginUiServer, RequestError } = require('@homebridge/plugin-ui-utils');
 let axios = require('axios');
+let FormData = require('form-data');
 
 class UiServer extends HomebridgePluginUiServer {
 
@@ -17,51 +18,51 @@ class UiServer extends HomebridgePluginUiServer {
         let { phoneNumber } = payload;
 
         try {
-            let response = await axios.post('https://api.sesamtechnology.com/v1/validations', {
-                phone: phoneNumber,
+            await axios.post('https://api.sesamtechnology.com/v2/verification/request-code', {
+                phoneNumber,
                 language: 'en',
-                purpose: 'ValidationWithCode'
+                destination: 'Phone'
             });
-
-            return { validationId: response.data.id };
         } catch (error) {
             throw new RequestError('Error while requesting validation code', error.response?.data || error);
         }
     }
 
     async validateCode(payload) {
-        let { validationId, code } = payload;
+        let { phoneNumber, code } = payload;
 
         try {
-            let response = await axios.post(`https://api.sesamtechnology.com/v1/validations/${validationId}`, {
-                code
+            let response = await axios.post('https://api.sesamtechnology.com/v2/verification/verify-code', {
+                phoneNumber,
+                verificationCode: code
             });
 
-            return { validationId: response.data.id };
+            return { verificationToken: response.data.verificationToken };
         } catch (error) {
             throw new RequestError('Error while validating code', error.response?.data || error);
         }
     }
 
     async authenticate(payload) {
-        let { validationId, phoneNumber, password } = payload;
+        let { verificationToken, phoneNumber, password } = payload;
 
         try {
-            let response = await axios.post('https://api.sesamtechnology.com/v1/authentications', {
-                validationId,
+            let formData = new FormData();
 
-                // These are modified values captured from the Bold API
-                clientType: 'IOS',
-                clientId: 4952073786011980410,
-                appId: 'sesam.technology.bold'
-            }, {
-                auth: {
-                    username: phoneNumber,
-                    password
+            formData.append('client_id', 'BoldApp');
+            formData.append('client_secret', 'pgJFgnGB87f9ednFiiHygCbf');
+            formData.append('username', phoneNumber);
+            formData.append('password', password);
+            formData.append('mfa_token', verificationToken);
+            formData.append('grant_type', 'password');
+
+            let response = await axios.post('https://api.sesamtechnology.com/v2/oauth/token', formData, {
+                headers: {
+                    ...formData.getHeaders()
                 }
             });
 
-            return { token: response.data.token };
+            return { accessToken: response.data.access_token, refreshToken: response.data.refresh_token };
         } catch (error) {
             throw new RequestError('Error while authenticating', error.response?.data || error);
         }
