@@ -26,7 +26,6 @@ The easiest way to configure this plugin is by using the [Config UI](https://git
 For HOOBS or Homebridge without a configuration UI, you can use the [authentication website](https://stefannienhuis.github.io/homebridge-bold/) and use the resulting access & refresh token in the [Manual configuration](#manual-configuration).
 
 *Notes:*
- * Bold only allows one logged in session per account. Unless you don't need to use the Bold app, it's recommended to create an additional account
  * A Bold Connect hub is required for this plugin to function. This plugin will only expose locks that are linked to a Bold Connect hub to HomeKit.
  * While HomeKit shows the lock with locked/unlocked state, this only reflects whether you can turn the lock, not whether the door is locked.
 
