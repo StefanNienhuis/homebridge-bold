@@ -183,8 +183,8 @@ class BoldPlatform implements DynamicPlatformPlugin {
 
         removeAccessories.forEach(this.removeAccessory.bind(this));
 
-        // Update devices
-        for (let accessory of this.accessories) {
+        // Update existing devices
+        for (let accessory of this.accessories.filter((accessory) => devices.find((device) => accessory.context.device.id == device.id))) {
             accessory.context.device = devices.find((device) => device.id == accessory.context.device.id);
             this.api.updatePlatformAccessories(this.accessories);
         }
