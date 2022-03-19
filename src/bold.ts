@@ -88,7 +88,7 @@ export class BoldAPI {
 
         if (Array.isArray(response.data)) {
             let devices = response.data as Device[];
-            let supportedDevices = devices.filter((device) => device.id != null && device.name && device.gateway != null);
+            let supportedDevices = devices.filter((device) => device.id != null && device.name && device.type.id == 1 && device.gateway != null);
 
             this.log.debug(`Total device count: ${devices.length}, Supported device count: ${supportedDevices.length}`);
             

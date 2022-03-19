@@ -3,6 +3,9 @@ export interface Device {
     name: string;
     serial: string;
     gateway: any; // Only checked for presence
+    type: {
+        id: number; // ID = 1 for locks
+    }
     settings: {
         activationTime: number;
     };
