@@ -8,8 +8,13 @@
         "homebridge": ">=1.0.0"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "prepublishOnly": "tsc"
+        "clean": "rm -rf build/ homebridge-ui/public/",
+        "build": "npm run build:plugin && npm run build:ui",
+        "build:plugin": "tsc",
+        "build:ui": "vite build homebridge-ui",
+        "dev": "tsc && homebridge -D",
+        "dev:ui": "vite build --watch homebridge-ui",
+        "prepublishOnly": "npm run build"
     },
     "keywords": [
         "homebridge-plugin",
@@ -22,10 +27,17 @@
     "license": "ISC",
     "devDependencies": {
         "@types/fs-extra": "^9.0.13",
+        "@types/react": "^18.0.9",
+        "@types/react-dom": "^18.0.3",
         "@typescript-eslint/eslint-plugin": "^4.32.0",
+        "@vitejs/plugin-react": "^1.3.2",
         "eslint": "^7.32.0",
         "homebridge": "^1.3.4",
-        "typescript": "^4.4.3"
+        "react": "^18.1.0",
+        "react-dom": "^18.1.0",
+        "react-qr-code": "^2.0.7",
+        "typescript": "^4.6.4",
+        "vite": "^2.9.8"
     },
     "dependencies": {
         "@homebridge/plugin-ui-utils": "^0.0.19",

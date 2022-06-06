@@ -152,3 +152,7 @@ dist
 .webpack/
 
 src/
+
+# homebridge-ui
+homebridge-ui/
+!homebridge-ui/public

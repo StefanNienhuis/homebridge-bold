@@ -1,0 +1,7 @@
+### Serverless ###
+# Ignore build directory
+.serverless
+.serverless-offline
+
+.env.production
+.env.staging

@@ -38,6 +38,12 @@ An example configuration can be found in the [config.example.json](config.exampl
 | `accessToken`  | `string` | **Required**<br/>Access token for the Bold API.  |
 | `refreshToken` | `string` | **Required**<br/>Refresh token for the Bold API. |
 
+## Backend
+
+The `backend/` folder contains the source code for the backend that is used while authenticating using the Bold app (default authentication). I host this myself on AWS. While your password is never available to this server, you can choose to self host this backend if you obtain a client id and secret from Bold. Specify a custom backend by clicking the settings icon on the login page.
+
+Alternatively you can also choose to use Legacy Authentication using username/password if you prefer not to use either of these options. This will log out your Bold app as only one username/password session can be active at the same time.
+
 ## Credits
 
 Thanks to [Erik Nienhuis](https://github.com/ErikNienhuis) for helping with reverse-engineering the Bold API and providing me with the Bold API documentation.

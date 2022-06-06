@@ -1,0 +1,206 @@
+service: homebridge-bold-backend
+
+provider:
+  name: aws
+  region: eu-west-1
+  runtime: nodejs16.x
+  architecture: arm64
+
+  httpApi:
+    name: ${self:service}-${opt:stage}
+    cors: true
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+
+          Resource:
+            - Fn::GetAtt:
+              - ConnectionsTable
+              - Arn
+            - Fn::Join: # Also allow indexes
+              - /
+              - 
+                - Fn::GetAtt:
+                  - ConnectionsTable
+                  - Arn
+                - index
+                - '*'
+
+
+  websocketsApiName: ${self:service}-websocket-${opt:stage}
+  websocketsApiRouteSelectionExpression: $request.body.action
+
+plugins:
+  - serverless-scriptable-plugin
+  - serverless-dynamodb-local
+  - serverless-offline
+  - serverless-domain-manager
+
+package:
+  individually: true
+
+functions:
+  websocketManager:
+    handler: websocket-manager.handler
+    name: ${self:service}-${opt:stage}-websocket-manager
+
+    environment: ${self:custom.stageOptions.environment.${opt:stage}, self:custom.stageOptions.environment.default}
+
+    package:
+      artifact: dist/websocket-manager.zip
+
+    events:
+      - websocket:
+          route: $connect
+      - websocket:
+          route: $disconnect
+
+  oauthBegin:
+    handler: oauth-begin.handler
+    name: ${self:service}-${opt:stage}-oauth-begin
+
+    environment: ${self:custom.stageOptions.environment.${opt:stage}, self:custom.stageOptions.environment.default}
+
+    package:
+      artifact: dist/oauth-begin.zip
+
+    events:
+      - websocket:
+          route: oauthBegin
+
+  oauthCallback:
+    handler: oauth-callback.handler
+    name: ${self:service}-${opt:stage}-oauth-callback
+
+    environment: ${self:custom.stageOptions.environment.${opt:stage}, self:custom.stageOptions.environment.default}
+
+    package:
+      artifact: dist/oauth-callback.zip
+
+    events:
+      - httpApi:
+          method: GET
+          path: /oauth/callback
+
+resources:
+  Resources:
+    ConnectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${opt:stage}-connections
+
+        AttributeDefinitions:
+          - AttributeName: ConnectionID
+            AttributeType: S
+
+          - AttributeName: OAuthCallbackID
+            AttributeType: S
+
+        KeySchema:
+          - AttributeName: ConnectionID
+            KeyType: HASH
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+        GlobalSecondaryIndexes:
+          - IndexName: OAuthCallbackID
+
+            KeySchema:
+              - AttributeName: OAuthCallbackID
+                KeyType: HASH
+            
+            Projection:
+              ProjectionType: KEYS_ONLY
+
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+
+custom:
+  scriptable:
+    hooks:
+      before:package:createDeploymentArtifacts: npm run package
+      before:offline:start:init: npm run package
+
+  dynamodb:
+    start:
+      noStart: true
+
+    stages:
+      - dev
+
+  customDomain: ${self:custom.stageOptions.customDomain.${opt:stage}, self:custom.stageOptions.customDomain.default}
+
+  stageOptions:
+    environment:
+      dev:
+        AWS_ACCESS_KEY_ID: DEFAULT_ACCESS_KEY
+        AWS_SECRET_ACCESS_KEY: DEFAULT_SECRET
+        AWS_REGION: localhost
+
+        BOLD_CLIENT_ID: ${env:BOLD_CLIENT_ID}
+        BOLD_CLIENT_SECRET: ${env:BOLD_CLIENT_SECRET}
+        BOLD_REDIRECT_URI: ${env:BOLD_REDIRECT_URI}
+
+        CONNECTIONS_TABLE_NAME: ${self:service}-${opt:stage}-connections
+        WEBSOCKET_MANAGEMENT_ENDPOINT: http://localhost:3001
+
+      default:
+        BOLD_CLIENT_ID: ${env:BOLD_CLIENT_ID}
+        BOLD_CLIENT_SECRET: ${env:BOLD_CLIENT_SECRET}
+        BOLD_REDIRECT_URI: ${env:BOLD_REDIRECT_URI}
+
+        CONNECTIONS_TABLE_NAME: ${self:service}-${opt:stage}-connections
+        WEBSOCKET_MANAGEMENT_ENDPOINT: # Value should be '{api-id}.execute-api.{region}.amazonaws.com/{stage}'
+          Fn::Join: 
+            - /
+            -
+              - https://
+              - Fn::Select:
+                - 1
+                - Fn::Split:
+                  - '://'
+                  - Fn::GetAtt:
+                    - WebsocketsApi
+                    - ApiEndpoint
+              - ${opt:stage}
+
+    customDomain:
+      prod:
+        http:
+          enabled: true
+          domainName: bold.nienhuisdevelopment.com
+          endpointType: regional
+          createRoute53Record: false
+
+        websocket:
+          enabled: true
+          domainName: bold-ws.nienhuisdevelopment.com
+          endpointType: regional
+          createRoute53Record: false
+
+      staging:
+        http:
+          enabled: true
+          domainName: staging.bold.nienhuisdevelopment.com
+          endpointType: regional
+          createRoute53Record: false
+
+        websocket:
+          enabled: true
+          domainName: staging.bold-ws.nienhuisdevelopment.com
+          endpointType: regional
+          createRoute53Record: false
+
+      default:
+        enabled: false
+        domainName: ''
