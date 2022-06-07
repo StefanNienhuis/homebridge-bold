@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "serverless offline start --stage dev",
     "build": "tsc",
-    "package": "npm run prepackage && npm run package:websocket-manager && npm run package:oauth-begin && npm run package:oauth-callback && npm run postpackage",
     "db:migrate": "serverless dynamodb migrate --stage dev",
     "clean": "rm -rf build/ dist/",
     "prepackage": "npm run clean && mkdir -p build dist && npm run build && cp package*.json build/ && cd build && npm install --production",
+    "package": "npm run prepackage && npm run package:websocket-manager && npm run package:oauth-begin && npm run package:oauth-callback && npm run package:oauth-refresh && npm run postpackage",
     "package:websocket-manager": "cd build && zip -r ../dist/websocket-manager.zip websocket-manager/ common/ node_modules/ package*.json",
     "package:oauth-begin": "cd build && zip -r ../dist/oauth-begin.zip oauth-begin.js common/ node_modules/ package*.json",
     "package:oauth-callback": "cd build && zip -r ../dist/oauth-callback.zip oauth-callback.js common/ node_modules/ package*.json",
+    "package:oauth-refresh": "cd build && zip -r ../dist/oauth-refresh.zip oauth-refresh.js common/ node_modules/ package*.json",
     "postpackage": "rm -rf build/"
   },
   "keywords": [
@@ -30,7 +31,7 @@
     "serverless": "^3.16.0",
     "serverless-domain-manager": "^6.0.3",
     "serverless-dynamodb-local": "^0.2.40",
-    "serverless-offline": "^8.7.0",
+    "serverless-offline": "^8.8.0",
     "serverless-scriptable-plugin": "^1.2.2",
     "typescript": "^4.6.4"
   },

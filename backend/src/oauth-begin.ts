@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { dynamoClient, websocketClient } from './common/clients';
 import { environment } from './common/environment';
 
-import { errorResponse, internalErrorResponse, respone } from './common/respones';
+import { errorResponse, internalErrorResponse, response } from './common/respones';
 
 export const handler: APIGatewayProxyHandler = async (event): Promise<APIGatewayProxyResult> => {
     try {
@@ -70,7 +70,7 @@ export const handler: APIGatewayProxyHandler = async (event): Promise<APIGateway
             }
         }
 
-        return respone(200);
+        return response(200);
     } catch (error) {
         console.error(`Unhandled exception: ${error}`);
         return internalErrorResponse(`Unhandled exception: ${error}`);

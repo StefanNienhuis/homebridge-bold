@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import AuthManager from '../../auth-manager';
+import { Config } from '../../types';
 import LegacyAuth from '../LegacyAuth';
 import Page from '../Page';
 
@@ -13,7 +14,7 @@ function App(): JSX.Element {
     let [isShowingQRCode, setShowingQRCode] = useState(false);
     let [oauthURL, setOAuthURL] = useState<string>();
 
-    let [result, setResult] = useState<{ accessToken: string, refreshToken: string }>();
+    let [result, setResult] = useState<Config>();
     let [isConfigured, setConfigured] = useState<boolean>();
 
     let [isInSettings, setInSettings] = useState(false);
@@ -40,7 +41,7 @@ function App(): JSX.Element {
         setOAuthURL(`https://boldsmartlock.com/app/authorize?response_type=code&client_id=HomeBridge&redirect_uri=${encodeURI(`${AuthManager.shared.callbackURL}`)}&state=${encodeURI(callbackId)}`);
 
         AuthManager.shared.once('oauthCallback', (result) => {
-            setResult(result);
+            setResult({ ...result, legacyAuthentication: false });
             AuthManager.shared.close();
         });
     }
@@ -71,6 +72,7 @@ function App(): JSX.Element {
 
                 config[0].accessToken = result.accessToken;
                 config[0].refreshToken = result.refreshToken;
+                config[0].legacyAuthentication = result.legacyAuthentication;
                 
                 await homebridge.updatePluginConfig(config);
                 homebridge.showSchemaForm();
@@ -104,8 +106,8 @@ function App(): JSX.Element {
                                 <label htmlFor="websocketURL">Custom WebSocket URL</label>
                                 <input name="websocketURL" placeholder="Custom WebSocket URL" value={websocketURL} onChange={onChange(setWebsocketURL)} className="w-100" />
 
-                                <label htmlFor="websocketURL" className="pt-3">Custom backend URL</label>
-                                <input name="backendURL" placeholder="Custom backend URL" value={callbackURL} onChange={onChange(setCallbackURL)} className="w-100" />
+                                <label htmlFor="callbackURL" className="pt-3">Custom callback URL</label>
+                                <input name="callbackURL" placeholder="Custom callback URL" value={callbackURL} onChange={onChange(setCallbackURL)} className="w-100" />
                             </Page>
                         );
                     } else if (!isAuthenticating) {

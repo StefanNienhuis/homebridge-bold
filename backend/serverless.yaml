@@ -89,6 +89,20 @@ functions:
           method: GET
           path: /oauth/callback
 
+  oauthRefresh:
+    handler: oauth-refresh.handler
+    name: ${self:service}-${opt:stage}-oauth-refresh
+
+    environment: ${self:custom.stageOptions.environment.${opt:stage}, self:custom.stageOptions.environment.default}
+
+    package:
+      artifact: dist/oauth-refresh.zip
+
+    events:
+      - httpApi:
+          method: POST
+          path: /oauth/refresh
+
 resources:
   Resources:
     ConnectionsTable:

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { dynamoClient, websocketClient } from './common/clients';
 import { environment } from './common/environment';
 
-import { errorResponse, internalErrorResponse, respone } from './common/respones';
+import { errorResponse, internalErrorResponse, response } from './common/respones';
 
 export const handler: APIGatewayProxyHandlerV2 = async (event): Promise<APIGatewayProxyResultV2> => {
     try {
@@ -124,7 +124,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event): Promise<APIGatew
             }
         }
 
-        return respone(200);
+        return response(200, 'Success! You can now close this window and return to Homebridge.');
     } catch (error) {
         console.error(`Unhandled exception: ${error}`);
         return internalErrorResponse(`Unhandled exception: ${error}`);

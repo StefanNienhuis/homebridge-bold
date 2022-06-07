@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { LegacyAuthPage } from '../../types';
+import { Config, LegacyAuthPage } from '../../types';
 import Page from '../Page';
 
 interface LegacyAuthProps {
-    setResult: (result: { accessToken: string, refreshToken: string }) => void;
+    setResult: (result: Config) => void;
 }
 
 function LegacyAuth(props: LegacyAuthProps): JSX.Element {
@@ -150,7 +150,7 @@ function LegacyAuth(props: LegacyAuthProps): JSX.Element {
 
             let { access_token, refresh_token } = body;
 
-            props.setResult({ accessToken: access_token, refreshToken: refresh_token });
+            props.setResult({ accessToken: access_token, refreshToken: refresh_token, legacyAuthentication: true });
         } catch (error) {
             console.error(`Error while authenticating: ${error}`);
             setError((error as any).toString());

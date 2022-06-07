@@ -2,7 +2,7 @@ import { DeleteItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import type { APIGatewayProxyResult } from 'aws-lambda';
 
 import { dynamoClient } from '../common/clients';
-import { internalErrorResponse, respone } from '../common/respones';
+import { internalErrorResponse, response } from '../common/respones';
 import { environment } from '../common/environment';
 
 export async function connect(connectionId: string): Promise<APIGatewayProxyResult> {
@@ -19,7 +19,7 @@ export async function connect(connectionId: string): Promise<APIGatewayProxyResu
         return internalErrorResponse(`Error while registering connection: ${error}`);
     }
 
-    return respone(200);
+    return response(200);
 }
 
 export async function disconnect(connectionId: string): Promise<APIGatewayProxyResult> {
@@ -36,5 +36,5 @@ export async function disconnect(connectionId: string): Promise<APIGatewayProxyR
         return internalErrorResponse(`Error while deleting connection: ${error}`);
     }
 
-    return respone(200);
+    return response(200);
 }

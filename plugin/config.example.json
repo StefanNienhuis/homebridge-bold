@@ -18,7 +18,8 @@
         {
             "platform": "Bold",
             "accessToken": "<access token>",
-            "refreshToken": "<refresh token>"
+            "refreshToken": "<refresh token>",
+            "legacyAuthentication": "false"
         }
     ]
 }

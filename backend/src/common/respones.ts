@@ -1,15 +1,19 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 
-export function respone(statusCode: number, data?: Record<string, unknown>): APIGatewayProxyResult {
+export function response(statusCode: number, string?: string): APIGatewayProxyResult
+export function response(statusCode: number, data?: Record<string, unknown>): APIGatewayProxyResult
+
+export function response(statusCode: number, stringOrData?: string | Record<string, unknown>): APIGatewayProxyResult {
     return {
         statusCode,
         headers: {
             'Content-Type': 'application/json'
         },
-        body: data ? JSON.stringify({
-            success: true,
-            data
-        }) : ''
+        body: typeof stringOrData == 'string' ? stringOrData :
+            stringOrData != null ? JSON.stringify({
+                success: true,
+                data: stringOrData
+            }) : ''
     };
 }
 

@@ -28,7 +28,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
     ) {
         this.hap = api.hap;
         this.config = config as Config;
-        this.bold = new BoldAPI(this.config.accessToken, this.config.refreshToken, this.log);
+        this.bold = new BoldAPI({  ...this.config }, this.log);
         
         api.on(APIEvent.DID_FINISH_LAUNCHING, async () => {
             await this.refreshAccessToken();

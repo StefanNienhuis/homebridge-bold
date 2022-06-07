@@ -5,6 +5,7 @@
     "customUi": true,
     "schema": {
         "type": "object",
+        "required": ["accessToken", "refreshToken", "legacyAuthentication"],
         "properties": {
             "accessToken": {
                 "title": "Access token",
@@ -17,6 +18,16 @@
                 "type": "string",
                 "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
                 "description": "This token will be used to refresh the access token."
+            },
+            "refreshURL": {
+                "title": "Custom refresh URL",
+                "type": "string",
+                "description": "Custom refresh URL for token refreshing. Use this only if you authenticated with a custom backend."
+            },
+            "legacyAuthentication": {
+                "title": "Use legacy authentication",
+                "type": "boolean",
+                "description": "Switch between default and legacy authentication. This settings will impact token refreshing."
             }
         }
     }
