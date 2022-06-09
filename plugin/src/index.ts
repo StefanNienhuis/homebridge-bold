@@ -14,7 +14,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
     private accessories: PlatformAccessory[] = [];
 
     private hap: HAP;
-    private config: Config;
+    // private config: Config;
     private bold: BoldAPI;
 
     private refreshInterval?: NodeJS.Timer;
@@ -27,8 +27,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
         private api: API
     ) {
         this.hap = api.hap;
-        this.config = config as Config;
-        this.bold = new BoldAPI({  ...this.config }, this.log);
+        this.bold = new BoldAPI(config as Config, this.log);
         
         api.on(APIEvent.DID_FINISH_LAUNCHING, async () => {
             await this.refreshAccessToken();
@@ -200,7 +199,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
             return;
         }
 
-        let platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.accessToken == this.config.accessToken);
+        let platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.accessToken == this.bold.config.accessToken);
 
         let hasWarned = false;
         if (platformIndex == -1) {
@@ -229,7 +228,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
             return;
         }
 
-        platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.accessToken == this.config.accessToken);
+        platformIndex = config.platforms.findIndex((platform: any) => platform.platform == PLATFORM_NAME && platform.accessToken == this.bold.config.accessToken);
         
         if (platformIndex == -1 && hasWarned == false) {
             this.log.warn("Warning while reading config for access token refresh: Couldn't find platform with current access token. Using first entry of Bold config.");
@@ -239,14 +238,13 @@ class BoldPlatform implements DynamicPlatformPlugin {
         if (platformIndex == -1) {
             this.log.error("Error while reading config for access token refresh: Couldn't find entry of Bold platform. Skipping token refresh.");
         }
-
-        this.config.accessToken = refreshedTokens.accessToken;
-        this.config.refreshToken = refreshedTokens.refreshToken;
         
         config.platforms[platformIndex].accessToken = refreshedTokens.accessToken;
         config.platforms[platformIndex].refreshToken = refreshedTokens.refreshToken;
         
         await fs.writeJSON(this.api.user.configPath(), config, { spaces: 4 });
+
+        this.bold.config = { ...this.bold.config, accessToken: refreshedTokens.accessToken, refreshToken: refreshedTokens.refreshToken };
     }
 
 }

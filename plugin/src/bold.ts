@@ -22,7 +22,7 @@ type APIResponse<Data> = APISuccess<Data> | APIError;
 export class BoldAPI {
 
     constructor(
-        private config: Config,
+        public config: Readonly<Config>,
         private log: Logger
     ) {}
 
@@ -99,12 +99,25 @@ export class BoldAPI {
         }
     }
 
-    async activate(deviceId: number): Promise<boolean> {
+    async activate(deviceId: number, hasRefreshedToken = false): Promise<boolean> {
         this.log.debug(`Activating device (${deviceId})`);
 
         let response = await this.request('POST', `/v1/devices/${deviceId}/remote-activation`);
 
-        if (!response.success) {
+        if (!response.success && response.error.code == 401 && !hasRefreshedToken) {
+            // If HTTP 401, try token refresh
+            this.log.warn(`Error while activating device (${deviceId}). Refreshing token and retrying.`);
+
+            await this.refresh();
+
+            let result = await this.activate(deviceId, true);
+
+            if (!result) {
+                this.log.error('Activation failed even after token refresh. Try logging in again. If this problem persists, open an issue.');
+            }
+
+            return result;
+        } else if (!response.success) {
             this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while activating device (${deviceId}): ${response.error.message}`);
 
             return false;
@@ -163,11 +176,8 @@ export class BoldAPI {
 
         let data = response.data as any;
 
-        this.config.accessToken = data.access_token;
-        this.config.refreshToken = data.refresh_token;
-
         this.log.debug('Successfully refreshed access token');
-        return { accessToken: this.config.accessToken, refreshToken: this.config.refreshToken };
+        return { accessToken: data.access_token, refreshToken: data.refresh_token };
     }
 
 }
