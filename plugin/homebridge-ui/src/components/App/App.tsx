@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
+
 import AuthManager from '../../auth-manager';
-import { Config } from '../../types';
 import LegacyAuth from '../LegacyAuth';
 import Page from '../Page';
+
+import { Config } from '../../types';
+import { AUTHORIZE_URL } from '../../const';
 
 function App(): JSX.Element {
     let [isAuthenticating, setAuthenticating] = useState(false);
@@ -38,7 +41,7 @@ function App(): JSX.Element {
         }
 
         setStartingOAuth(false);
-        setOAuthURL(`https://boldsmartlock.com/app/authorize?response_type=code&client_id=HomeBridge&redirect_uri=${encodeURI(`${AuthManager.shared.callbackURL}`)}&state=${encodeURI(callbackId)}`);
+        setOAuthURL(`${AUTHORIZE_URL}?response_type=code&client_id=HomeBridge&redirect_uri=${encodeURI(`${AuthManager.shared.callbackURL}`)}&state=${encodeURI(callbackId)}`);
 
         AuthManager.shared.once('oauthCallback', (result) => {
             setResult({ ...result, legacyAuthentication: false });
@@ -126,13 +129,13 @@ function App(): JSX.Element {
                                 ] : oauthURL != null ?
                                     [
                                         { icon: 'copy', action: () => navigator.clipboard.writeText(oauthURL || '') },
-                                        { title: 'Open Bold', action: () => window.open(oauthURL) },
+                                        { title: 'Log in', action: () => window.open(oauthURL) },
                                         { icon: 'qrcode', action: () => setShowingQRCode(!isShowingQRCode) }
                                     ] :
                                     []
                             } settingsAction={() => setInSettings(true)}>
                                 <p>Log in using the Bold app by pressing the button below.</p>
-                                <p className="text-muted fw-italic">Note: This must be done on a device with the Bold app installed. If this is not possible, use the <a href="#" onClick={() => setLegacyAuthentication(true)}>legacy authentication</a>.</p>
+                                <p className="text-muted fw-italic">Alternatively: use the <a href="#" onClick={() => setLegacyAuthentication(true)}>legacy authentication</a>.</p>
                 
                                 {
                                     isShowingQRCode && oauthURL != null ?

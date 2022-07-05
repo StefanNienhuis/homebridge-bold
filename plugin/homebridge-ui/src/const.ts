@@ -1,0 +1,1 @@
+export const AUTHORIZE_URL = 'https://auth.boldsmartlock.com';
