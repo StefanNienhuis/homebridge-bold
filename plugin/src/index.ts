@@ -89,7 +89,7 @@ class BoldPlatform implements DynamicPlatformPlugin {
                           .onGet(() => device.model.model || 'Lock');
 
         informationService.getCharacteristic(this.hap.Characteristic.SerialNumber)
-                          .onGet(() => device.serial || 'Unknown');
+                          .onGet(() => device.serial || `${device.type.id}-${device.model.id}-${device.owner.organizationId}-${device.id}`);
 
         informationService.getCharacteristic(this.hap.Characteristic.FirmwareRevision)
                           .onGet(() => `${device.actualFirmwareVersion || 'Unknown'}`);
