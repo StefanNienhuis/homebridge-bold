@@ -30,7 +30,7 @@ export class BoldAPI {
         try {
             let response = await axios.request<any>({
                 method: method,
-                url: `https://api.sesamtechnology.com${endpoint}`,
+                url: `https://api.boldsmartlock.com${endpoint}`,
                 headers: {
                     'Authorization': `Bearer ${this.config.accessToken}`,
                     ...(!Object.keys(headers || {}).some((header) => header.toLowerCase() == 'content-type') && { 'Content-Type': 'application/json' }),

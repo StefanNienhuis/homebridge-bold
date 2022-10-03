@@ -61,7 +61,7 @@ function LegacyAuth(props: LegacyAuthProps): JSX.Element {
 
     async function getVerificationCode() {
         try {
-            let response = await fetch('https://api.sesamtechnology.com/v2/verification/request-code', {
+            let response = await fetch('https://api.boldsmartlock.com/v2/verification/request-code', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ function LegacyAuth(props: LegacyAuthProps): JSX.Element {
 
     async function validateCode() {
         try {
-            let response = await fetch('https://api.sesamtechnology.com/v2/verification/verify-code', {
+            let response = await fetch('https://api.boldsmartlock.com/v2/verification/verify-code', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ function LegacyAuth(props: LegacyAuthProps): JSX.Element {
             form.append('client_id', 'BoldApp');
             form.append('client_secret', 'pgJFgnGB87f9ednFiiHygCbf');
 
-            let response = await fetch('https://api.sesamtechnology.com/v2/oauth/token', {
+            let response = await fetch('https://api.boldsmartlock.com/v2/oauth/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
