@@ -166,7 +166,19 @@ class BoldPlatform implements DynamicPlatformPlugin {
     // Bold API
 
     async updateDevices() {
-        let devices = await this.bold.getDevices();
+        let devices: Device[];
+
+        try {
+            devices = await this.bold.getDevices();
+        } catch (error) {
+            if (this.accessories.length == 0) {
+                this.log.error('Unable to get devices. Check your authentication details.');
+            } else {
+                this.log.warn('Unable to refresh devices. Preserving cached accessories, which might be incorrect. Check your authentication details.');
+            }
+
+            return;
+        }
 
         // Add devices
         let addDevices = devices.filter((device) => !this.accessories.find((accessory) => accessory.context.device.id == device.id));

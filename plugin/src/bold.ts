@@ -81,9 +81,7 @@ export class BoldAPI {
         let response = await this.request('GET', '/v1/effective-device-permissions');
 
         if (!response.success) {
-            this.log.error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while getting devices: ${response.error.message}`);
-
-            return [];
+            throw new Error(`Error ${response.error.code ? `(${response.error.code}) ` : ''}while getting devices: ${response.error.message}`);
         }
 
         if (Array.isArray(response.data)) {
@@ -94,8 +92,7 @@ export class BoldAPI {
             
             return supportedDevices;
         } else {
-            this.log.error(`Unknown reponse while getting devices: ${response.data}`);
-            return [];
+            throw new Error('Unknown reponse while getting devices: ${response.data}');
         }
     }
 
