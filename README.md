@@ -13,6 +13,9 @@ This [Homebridge](https://homebridge.io) plugin brings HomeKit support for the B
 
 </span>
 
+## Referral
+If you're considering buying a Bold Lock, get 10% and support me by using the referral code: [STENIE1](https://boldsmartlock.com?referral-code=STENIE1).
+
 ## Installation
 First, install Homebridge<br/>
 `npm install --global homebridge`
