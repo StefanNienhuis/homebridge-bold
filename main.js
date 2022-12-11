@@ -34,7 +34,7 @@ async function requestCode() {
     phoneNumber = document.getElementById('phoneNumber').value;
 
     try {
-        let response = await fetch('https://api.sesamtechnology.com/v1/validations', {
+        let response = await fetch('https://api.boldsmartlock.com/v1/validations', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -65,7 +65,7 @@ async function validateCode() {
     let code = document.getElementById('validationCode').value;
 
     try {
-        let response = await fetch(`https://api.sesamtechnology.com/v1/validations/${validationId}`, {
+        let response = await fetch(`https://api.boldsmartlock.com/v1/validations/${validationId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ async function authenticate() {
     let password = document.getElementById('password').value;
 
     try {
-        let response = await fetch('https://api.sesamtechnology.com/v1/authentications', {
+        let response = await fetch('https://api.boldsmartlock.com/v1/authentications', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
