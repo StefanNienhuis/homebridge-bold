@@ -28,6 +28,11 @@
                 "title": "Use legacy authentication",
                 "type": "boolean",
                 "description": "Switch between default and legacy authentication. This settings will impact token refreshing."
+            },
+            "showControllerAsLock": {
+                "title": "Show Controller as lock",
+                "type": "boolean",
+                "description": "When using the Bold Connect's built-in relay (called 'Controller' in the Bold app), it will show as a switch in HomeKit. This option will make it show as a lock instead."
             }
         }
     }

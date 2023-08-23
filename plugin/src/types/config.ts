@@ -5,4 +5,5 @@ export interface Config extends PlatformConfig {
     refreshToken: string;
     refreshURL?: string;
     legacyAuthentication: boolean;
+    showControllerAsLock: boolean;
 }

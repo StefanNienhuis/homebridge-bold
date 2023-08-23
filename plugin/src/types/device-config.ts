@@ -1,4 +1,9 @@
-export interface Device {
+export enum DeviceType {
+    Lock = 1,
+    Connect = 2
+}
+
+export interface DeviceConfig {
     id: number;
     name: string;
     serial: string;
@@ -7,7 +12,7 @@ export interface Device {
         organizationId: number;
     };
     type: {
-        id: number; // ID = 1 for locks
+        id: DeviceType
     };
     settings: {
         activationTime: number;
@@ -18,4 +23,7 @@ export interface Device {
         model: string;
     };
     actualFirmwareVersion: number;
+    featureSet: {
+        isActivatable: boolean;
+    }
 }

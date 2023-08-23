@@ -2,7 +2,7 @@ import axios, { AxiosError, Method } from 'axios';
 import FormData from 'form-data';
 import { Logger } from 'homebridge';
 import { REFRESH_URL, LEGACY_CLIENT_ID, LEGACY_CLIENT_SECRET } from './const';
-import { Config, Device } from './types';
+import { Config, DeviceConfig } from './types';
 
 interface APISuccess<Data> {
     success: true;
@@ -75,7 +75,7 @@ export class BoldAPI {
         }
     }
 
-    async getDevices(): Promise<Device[]> {
+    async getDevices(): Promise<DeviceConfig[]> {
         this.log.debug('Getting all devices');
 
         let response = await this.request('GET', '/v1/effective-device-permissions');
@@ -85,8 +85,8 @@ export class BoldAPI {
         }
 
         if (Array.isArray(response.data)) {
-            let devices = response.data as Device[];
-            let supportedDevices = devices.filter((device) => device.id != null && device.name && device.type.id == 1 && device.gateway != null);
+            let devices = response.data as DeviceConfig[];
+            let supportedDevices = devices.filter((device) => device.id != null && device.name && device.featureSet.isActivatable && device.gateway != null);
 
             this.log.debug(`Total device count: ${devices.length}, Supported device count: ${supportedDevices.length}`);
             
