@@ -33,7 +33,7 @@ For HOOBS or Homebridge without a configuration UI, you can use the [authenticat
  * While HomeKit shows the lock with locked/unlocked state, this only reflects whether you can turn the lock, not whether the door is locked.
 
 ### Manual configuration
-An example configuration can be found in the [config.example.json](config.example.json) file.
+An example configuration can be found in the [config.example.json](plugin/config.example.json) file.
 
 | Property               | Type      | Details                                                                                                             |
 | ---------------------- | --------- | ------------------------------------------------------------------------------------------------------------------- |
