@@ -1,7 +1,7 @@
 {
     "name": "homebridge-bold",
     "displayName": "Homebridge Bold",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "description": "HomeKit support for the Bold Smart Locks.",
     "main": "build/index.js",
     "engines": {
@@ -14,7 +14,8 @@
         "build:ui": "vite build homebridge-ui",
         "dev": "tsc && homebridge -D",
         "dev:ui": "vite build --watch homebridge-ui",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "cp ../README.md ./ && npm run build",
+        "postpublish": "rm ./README.md"
     },
     "keywords": [
         "homebridge-plugin",
