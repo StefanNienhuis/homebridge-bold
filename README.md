@@ -23,6 +23,10 @@ First, install Homebridge<br/>
 Then, install the Bold plugin<br/>
 `npm install --global homebridge-bold`
 
+If you are running Homebridge with Docker, open the Homebridge UI and open the terminal in the browser,
+
+`hb-service add homebridge-bold`
+
 ## Configuration
 The easiest way to configure this plugin is by using the [Config UI](https://github.com/oznu/homebridge-config-ui-x), as this plugin provides a login flow for the access & refresh token.
 
